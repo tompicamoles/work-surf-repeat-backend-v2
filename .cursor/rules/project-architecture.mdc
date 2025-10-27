@@ -1,0 +1,8 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+The project is following clean architecture / hegonal architecture.
+It is built using NestJs framework
