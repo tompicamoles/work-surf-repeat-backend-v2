@@ -1,12 +1,18 @@
 import { Inject, Injectable } from '@nestjs/common';
+import {
+  GEMINI_PROVIDER,
+  type GeminiProvider,
+} from 'src/application/src/lib/gemini/gemini.provider';
+import {
+  UNSPLASH_PROVIDER,
+  type UnsplashProvider,
+} from 'src/application/src/lib/unsplash/unsplash.provider';
 import { Country } from '../domain/spot.enum';
 import { Spot, SpotConstructorParams } from '../domain/spot.model';
 import type {
-  AiModerationPort,
   ContentGenerationPort,
   CountryDataPort,
   GeolocationPort,
-  ImagePort,
 } from './ports';
 import type { SpotsRepository } from './spot.repository';
 import { SPOTS_REPOSITORY } from './spot.repository';
@@ -25,12 +31,12 @@ export class CreateSpotUseCase {
   constructor(
     @Inject(SPOTS_REPOSITORY)
     private readonly spotRepository: SpotsRepository,
-    @Inject('AI_MODERATION_PORT')
-    private readonly aiModeration: AiModerationPort,
+    @Inject(GEMINI_PROVIDER)
+    private readonly aiModeration: GeminiProvider,
     @Inject('GEOLOCATION_PORT')
     private readonly geolocation: GeolocationPort,
-    @Inject('IMAGE_PORT')
-    private readonly imageService: ImagePort,
+    @Inject(UNSPLASH_PROVIDER)
+    private readonly imageService: UnsplashProvider,
     @Inject('COUNTRY_DATA_PORT')
     private readonly countryData: CountryDataPort,
     @Inject('CONTENT_GENERATION_PORT')
@@ -40,10 +46,8 @@ export class CreateSpotUseCase {
   async execute(params: CreateSpotUseCaseParams): Promise<Spot> {
     const { name, country, wifiQuality, creatorName, submittedBy } = params;
 
-    const isValidatedByAiModeration = await this.aiModeration.validateSpot(
-      name,
-      country,
-    );
+    const isValidatedByAiModeration =
+      await this.aiModeration.validateSpotEligibility(name, country);
 
     // the AI validation is hapenning first here before calling the other External APIs
     Spot.validateEligibilityOrThrow({
@@ -61,7 +65,9 @@ export class CreateSpotUseCase {
     ]);
 
     const imageLink =
-      params.imageLink || (await this.imageService.getRandomImage());
+      params.imageLink !== undefined
+        ? new URL(params.imageLink)
+        : await this.imageService.generateRandomImage('surf');
 
     const spotData: SpotConstructorParams = {
       id,

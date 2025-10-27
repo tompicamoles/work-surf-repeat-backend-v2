@@ -22,11 +22,6 @@ export interface GeolocationPort {
   getCoordinates(location: string, country: Country): Promise<GeolocationData>;
 }
 
-// application/ports/image.port.ts
-export interface ImagePort {
-  getRandomImage(): Promise<string>;
-}
-
 // application/ports/country-data.port.ts
 export interface CountryDataPort {
   getCountryInfo(country: Country): Promise<CountryRelatedData>;

@@ -29,7 +29,7 @@ export interface SpotConstructorParams {
   id: number;
   name: string;
   country: Country;
-  imageLink: string;
+  imageLink: URL;
   hasCoworking: boolean;
   hasColiving: boolean;
   latitude: number;
@@ -53,7 +53,7 @@ export class Spot {
   public readonly id: number;
   public readonly name: string;
   public readonly country: Country;
-  public readonly imageLink: string;
+  public readonly imageLink: URL;
   public readonly hasCoworking: boolean;
   public readonly hasColiving: boolean;
   public readonly latitude: number;
@@ -97,7 +97,7 @@ export class Spot {
     if (!params.country) {
       throw new SpotValidationError('Country is required');
     }
-    if (!params.imageLink?.trim()) {
+    if (!params.imageLink) {
       throw new SpotValidationError('Image link is required');
     }
     if (!params.submittedBy?.trim()) {
@@ -161,6 +161,15 @@ export class Spot {
         `${params.name} in ${params.country} is not suitable for surfing or remote work`,
       );
     }
+  }
+
+  static getAiModeratorInstructions(name, country) {
+    return `Location inludes the name of the location and the country. 
+        Evaluate 'false' if the location does not exist. 
+        Evaluate: 'true' if Location is <=20 min drive from ocean/sea AND only if traditional ocean surfing is possible. 
+        Else 'false'. 
+        Output: respond with 'true' or 'false' only. 
+        Location: ${name}, ${country}`;
   }
 
   // //todo il faut sauvegarder tout l'agrégat à la suite de l'ajout / supression d'un like ?
