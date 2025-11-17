@@ -6,7 +6,7 @@ export const spotMapper = {
     _id: spot.id,
     name: spot.name,
     country: spot.country,
-    image_link: spot.imageLink,
+    image_link: spot.imageLink.toString(),
     latitude: spot.latitude,
     longitude: spot.longitude,
     submitted_by: spot.submittedBy,

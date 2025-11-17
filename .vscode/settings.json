@@ -1,4 +1,5 @@
-{ "editor.codeActionsOnSave": {
+{ 
+  "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
@@ -6,6 +7,12 @@
   "eslint.validate": ["javascript", "typescript",],
   "eslint.alwaysShowStatus": true,
   "eslint.format.enable": true,
+  "eslint.rules.customizations": [ // to remove unsage assignment errors coming from nest js JWT sdk
+    {
+      "rule": "@typescript-eslint/no-unsafe-assignment",
+      "severity": "off"
+    }
+  ],
   "prettier.eslintIntegration": true,
   "prettier.enable": true,
   "[typescript]": {
@@ -30,5 +37,6 @@
       "titleBar.inactiveBackground": "#fc577699",
       "titleBar.inactiveForeground": "#15202b99"
     },
-    "peacock.color": "#fc5776"
+    "peacock.color": "#fc5776",
+    "postman.settings.dotenv-detection-notification-visibility": false
 }

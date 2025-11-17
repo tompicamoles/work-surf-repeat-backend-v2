@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { AuthenticatedRequest } from 'src/infrastructure/src/lib/auth/guards/auth.guard';
 import {
   CreateSpotUseCase,
   CreateSpotUseCaseParams,
@@ -24,16 +25,23 @@ export class SpotsService {
     return spot;
   }
 
-  async create(createSpotDto: CreateSpotDto): Promise<SpotResponseDto> {
+  async create(
+    createSpotDto: CreateSpotDto,
+    request: AuthenticatedRequest,
+  ): Promise<SpotResponseDto> {
     //todo implement authentification to get userID and userName from token
-    const submittedBy = 123;
-    const creatorName = 'lol';
+    const submittedBy = request.user.sub;
+    const creatorName = request.user.user_metadata.full_name;
     const spotData: CreateSpotUseCaseParams = {
       ...createSpotDto,
       creatorName,
       submittedBy,
     };
     const spot = await this.createSpotUsecase.execute(spotData);
-    return { ...spot, totalLike: spot.totalLikes };
+    return {
+      ...spot,
+      imageLink: spot.imageLink.toString(),
+      totalLike: spot.likes.length,
+    };
   }
 }

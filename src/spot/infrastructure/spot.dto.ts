@@ -9,7 +9,7 @@ export class CreateSpotDto {
 
   @IsString()
   @IsNotEmpty()
-  public country: string;
+  public country: Country;
 
   @IsString()
   @IsOptional()
@@ -34,7 +34,7 @@ export class SpotResponseDto {
   surfSeason: string;
   lifeCost: number;
   creatorName: string;
-  likes?: SpotLike[];
+  likes: SpotLike[];
   totalLike: number;
   summary: string;
 }

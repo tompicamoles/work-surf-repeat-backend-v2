@@ -1,7 +1,9 @@
-import { Module } from '@nestjs/common';
-import { PostgresClientService } from './postgres-client.service';
+import { Global, Module } from '@nestjs/common';
+import { PostgresClient } from './postgres-client';
 
+@Global()
 @Module({
-  providers: [PostgresClientService],
+  providers: [PostgresClient],
+  exports: [PostgresClient],
 })
 export class PostgresClientModule {}

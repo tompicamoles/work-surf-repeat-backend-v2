@@ -6,12 +6,16 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Request,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
 import { CreateSpotDto, SpotResponseDto } from './spot.dto';
 import { SpotsService } from './spot.service';
 
 import { HttpException, HttpStatus, Param } from '@nestjs/common';
+import type { AuthenticatedRequest } from 'src/infrastructure/src/lib/auth/guards/auth.guard';
+import { AuthGuard } from 'src/infrastructure/src/lib/auth/guards/auth.guard';
 @Controller('spot')
 export class SpotsController {
   constructor(private spotService: SpotsService) {}
@@ -32,8 +36,12 @@ export class SpotsController {
     return spot;
   }
 
+  @UseGuards(AuthGuard)
   @Post('create')
-  create(@Body(ValidationPipe) input: CreateSpotDto): Promise<SpotResponseDto> {
-    return this.spotService.create(input);
+  create(
+    @Request() req: AuthenticatedRequest,
+    @Body(ValidationPipe) input: CreateSpotDto,
+  ): Promise<SpotResponseDto> {
+    return this.spotService.create(input, req);
   }
 }

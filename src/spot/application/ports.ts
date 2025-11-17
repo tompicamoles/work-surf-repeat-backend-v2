@@ -12,11 +12,6 @@ interface GeolocationData {
 
 //todo : deplacer chaque port au bon endroit et bien organiser le code afin de pouvoir réutiliser le nécessaire
 
-// application/ports/ai-moderation.port.ts
-export interface AiModerationPort {
-  validateSpot(name: string, country: Country): Promise<boolean>;
-}
-
 // application/ports/geolocation.port.ts
 export interface GeolocationPort {
   getCoordinates(location: string, country: Country): Promise<GeolocationData>;
