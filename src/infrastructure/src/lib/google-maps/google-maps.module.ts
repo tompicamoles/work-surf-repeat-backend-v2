@@ -5,5 +5,6 @@ import { GoogleMapsProvider } from './google-maps.provider';
 @Global()
 @Module({
   providers: [{ provide: GEOLOCATION_PROVIDER, useClass: GoogleMapsProvider }],
+  exports: [GEOLOCATION_PROVIDER],
 })
 export class GoogleMapsModule {}

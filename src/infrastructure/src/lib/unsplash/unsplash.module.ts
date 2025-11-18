@@ -10,5 +10,6 @@ import { UnsplashApiProvider } from './unsplash.provider';
       useClass: UnsplashApiProvider,
     },
   ],
+  exports: [IMAGE_GENERATOR_PROVIDER],
 })
 export class UnsplashModule {}

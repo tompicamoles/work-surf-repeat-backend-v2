@@ -1,6 +1,6 @@
 import { GoogleGenAI } from '@google/genai';
 import { Injectable } from '@nestjs/common';
-import { AiProvider } from 'src/application/src/lib/providers/aiProvider/ai.provider';
+import { AiProvider } from 'src/application/src/lib/providers/ai-provider/ai.provider';
 import { Spot } from 'src/spot/domain/spot.model';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   AI_PROVIDER,
   type AiProvider,
-} from 'src/application/src/lib/providers/aiProvider/ai.provider';
+} from 'src/application/src/lib/providers/ai-provider/ai.provider';
 import {
   GEOLOCATION_PROVIDER,
   type GeolocationProvider,
