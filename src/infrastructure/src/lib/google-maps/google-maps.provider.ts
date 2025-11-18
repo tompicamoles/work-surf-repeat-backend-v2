@@ -1,22 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { GeolocationProvider } from 'src/application/src/lib/providers/geolocationProvider/geolocation.provider';
 
-import { Client } from '@googlemaps/google-maps-services-js';
+import { Client, GeocodeResponse } from '@googlemaps/google-maps-services-js';
 
 @Injectable()
 export class GoogleMapsProvider implements GeolocationProvider {
-  private client = new Client({});
-  private apiKey = process.env.GOOGLE_MAPS_API_BACKEND;
+  private readonly client: Client;
+  private readonly apiKey: string;
 
   constructor() {
-    if (!this.apiKey) {
+    const apiKey = process.env.GOOGLE_MAPS_API_BACKEND;
+    if (!apiKey) {
       throw new Error('GOOGLE_MAPS_API environment variable is not set');
     }
+    this.apiKey = apiKey;
+    this.client = new Client({});
   }
 
   async getGeolocation(name: string, country: string) {
     try {
-      const response = await this.client.geocode({
+      const response: GeocodeResponse = await this.client.geocode({
         params: {
           address: `${name},${country}`,
           key: this.apiKey,
@@ -34,7 +37,10 @@ export class GoogleMapsProvider implements GeolocationProvider {
 
       return geolocation;
     } catch (error) {
-      throw new Error('Fetching geolocation failed:');
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error('Fetching geolocation failed');
     }
   }
 }

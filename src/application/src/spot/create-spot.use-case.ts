@@ -3,16 +3,22 @@ import {
   AI_PROVIDER,
   type AiProvider,
 } from 'src/application/src/lib/providers/aiProvider/ai.provider';
-import { type GeolocationProvider } from 'src/application/src/lib/providers/geolocationProvider/geolocation.provider';
+import {
+  GEOLOCATION_PROVIDER,
+  type GeolocationProvider,
+} from 'src/application/src/lib/providers/geolocationProvider/geolocation.provider';
 import {
   IMAGE_GENERATOR_PROVIDER,
   type ImageGeneratorProvider,
 } from 'src/application/src/lib/providers/imageGenerator/imageGenerator.provider';
-import { Country } from '../domain/spot.enum';
-import { Spot, SpotConstructorParams } from '../domain/spot.model';
-import type { CountryDataPort } from './ports';
-import type { SpotsRepository } from './spot.repository';
-import { SPOTS_REPOSITORY } from './spot.repository';
+import { Country } from '../../../spot/domain/spot.enum';
+import { Spot, SpotConstructorParams } from '../../../spot/domain/spot.model';
+import {
+  COUNTRY_DATA_REPOSITORY,
+  type CountryDataRepository,
+} from '../lib/repositories/country-data.repository';
+import type { SpotRepository } from '../lib/repositories/spot.repository';
+import { SPOT_REPOSITORY } from '../lib/repositories/spot.repository';
 
 export interface CreateSpotUseCaseParams {
   name: string;
@@ -26,16 +32,16 @@ export interface CreateSpotUseCaseParams {
 @Injectable()
 export class CreateSpotUseCase {
   constructor(
-    @Inject(SPOTS_REPOSITORY)
-    private readonly spotRepository: SpotsRepository,
+    @Inject(SPOT_REPOSITORY)
+    private readonly spotRepository: SpotRepository,
     @Inject(AI_PROVIDER)
     private readonly aiProvider: AiProvider,
-    @Inject('GEOLOCATION_PROVIDER')
+    @Inject(GEOLOCATION_PROVIDER)
     private readonly geolocation: GeolocationProvider,
     @Inject(IMAGE_GENERATOR_PROVIDER)
     private readonly imageService: ImageGeneratorProvider,
-    @Inject('COUNTRY_DATA_PORT')
-    private readonly countryData: CountryDataPort,
+    @Inject(COUNTRY_DATA_REPOSITORY)
+    private readonly countryData: CountryDataRepository,
   ) {}
 
   async execute(params: CreateSpotUseCaseParams): Promise<Spot> {
@@ -55,7 +61,7 @@ export class CreateSpotUseCase {
 
     const [summary, countryInfo, coordinates] = await Promise.all([
       this.aiProvider.generateSpotSummary(name, country),
-      this.countryData.getCountryInfo(country),
+      this.countryData.getCountryData(country),
       this.geolocation.getGeolocation(name, country),
     ]);
 

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { SpotsRepository } from 'src/spot/application/spot.repository';
+import { SpotRepository } from 'src/application/src/lib/repositories/spot.repository';
 import { Spot } from 'src/spot/domain/spot.model';
 import { PostgresClient } from '../postgres-client/postgres-client';
 
 @Injectable()
-export class PostgresSpotRepository implements SpotsRepository {
+export class PostgresSpotRepository implements SpotRepository {
   constructor(private readonly client: PostgresClient) {} // todo should I import it here ?
 
   async create(spot: Spot): Promise<void> {

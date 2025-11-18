@@ -3,7 +3,7 @@ import { AuthenticatedRequest } from 'src/infrastructure/src/lib/auth/guards/aut
 import {
   CreateSpotUseCase,
   CreateSpotUseCaseParams,
-} from '../application/create-spot.use-case';
+} from '../../application/src/spot/create-spot.use-case';
 import { CreateSpotDto, SpotResponseDto } from './spot.dto';
 @Injectable()
 export class SpotsService {

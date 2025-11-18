@@ -1,5 +1,5 @@
 export interface SpotRecord {
-  _id: number;
+  _id: `${string}-${string}-${string}-${string}-${string}`;
   name: string;
   country: string;
   image_link: string;

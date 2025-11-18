@@ -1,8 +1,8 @@
-import { Spot } from '../domain/spot.model';
+import { Spot } from '../../../../spot/domain/spot.model';
 
-export const SPOTS_REPOSITORY = Symbol('SPOTS_REPOSITORY');
+export const SPOT_REPOSITORY = Symbol('SPOT_REPOSITORY');
 
-export interface SpotsRepository {
+export interface SpotRepository {
   // findAll(): Promise<Spot[]>;
   // findById(id: number): Promise<Spot | undefined>;
   // findByIdOrThrow(id: number): Promise<Spot>;
