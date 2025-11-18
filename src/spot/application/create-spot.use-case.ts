@@ -1,19 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import {
-  GEMINI_PROVIDER,
-  type GeminiProvider,
-} from 'src/application/src/lib/gemini/gemini.provider';
+  AI_PROVIDER,
+  type AiProvider,
+} from 'src/application/src/lib/providers/aiProvider/ai.provider';
+import { type GeolocationProvider } from 'src/application/src/lib/providers/geolocationProvider/geolocation.provider';
 import {
-  UNSPLASH_PROVIDER,
-  type UnsplashProvider,
-} from 'src/application/src/lib/unsplash/unsplash.provider';
+  IMAGE_GENERATOR_PROVIDER,
+  type ImageGeneratorProvider,
+} from 'src/application/src/lib/providers/imageGenerator/imageGenerator.provider';
 import { Country } from '../domain/spot.enum';
 import { Spot, SpotConstructorParams } from '../domain/spot.model';
-import type {
-  ContentGenerationPort,
-  CountryDataPort,
-  GeolocationPort,
-} from './ports';
+import type { CountryDataPort } from './ports';
 import type { SpotsRepository } from './spot.repository';
 import { SPOTS_REPOSITORY } from './spot.repository';
 
@@ -31,23 +28,21 @@ export class CreateSpotUseCase {
   constructor(
     @Inject(SPOTS_REPOSITORY)
     private readonly spotRepository: SpotsRepository,
-    @Inject(GEMINI_PROVIDER)
-    private readonly aiModeration: GeminiProvider,
-    @Inject('GEOLOCATION_PORT')
-    private readonly geolocation: GeolocationPort,
-    @Inject(UNSPLASH_PROVIDER)
-    private readonly imageService: UnsplashProvider,
+    @Inject(AI_PROVIDER)
+    private readonly aiProvider: AiProvider,
+    @Inject('GEOLOCATION_PROVIDER')
+    private readonly geolocation: GeolocationProvider,
+    @Inject(IMAGE_GENERATOR_PROVIDER)
+    private readonly imageService: ImageGeneratorProvider,
     @Inject('COUNTRY_DATA_PORT')
     private readonly countryData: CountryDataPort,
-    @Inject('CONTENT_GENERATION_PORT')
-    private readonly contentGeneration: ContentGenerationPort,
   ) {}
 
   async execute(params: CreateSpotUseCaseParams): Promise<Spot> {
     const { name, country, wifiQuality, creatorName, submittedBy } = params;
 
     const isValidatedByAiModeration =
-      await this.aiModeration.validateSpotEligibility(name, country);
+      await this.aiProvider.validateSpotEligibility(name, country);
 
     // the AI validation is hapenning first here before calling the other External APIs
     Spot.validateEligibilityOrThrow({
@@ -56,12 +51,12 @@ export class CreateSpotUseCase {
       isValidatedByAiModeration,
     });
 
-    const id = 1242525; //todo
+    const uuid = crypto.randomUUID();
 
     const [summary, countryInfo, coordinates] = await Promise.all([
-      this.contentGeneration.generateSummary(name, country),
+      this.aiProvider.generateSpotSummary(name, country),
       this.countryData.getCountryInfo(country),
-      this.geolocation.getCoordinates(name, country),
+      this.geolocation.getGeolocation(name, country),
     ]);
 
     const imageLink =
@@ -70,7 +65,7 @@ export class CreateSpotUseCase {
         : await this.imageService.generateRandomImage('surf');
 
     const spotData: SpotConstructorParams = {
-      id,
+      id: uuid,
       name,
       country,
       latitude: coordinates.latitude,

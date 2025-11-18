@@ -21,7 +21,7 @@ export class CreateSpotDto {
 }
 
 export class SpotResponseDto {
-  id: number;
+  id: string;
   name: string;
   country: Country;
   imageLink: string;

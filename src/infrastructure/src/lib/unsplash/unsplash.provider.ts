@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { UnsplashProvider } from 'src/application/src/lib/unsplash/unsplash.provider';
+import { ImageGeneratorProvider } from 'src/application/src/lib/providers/imageGenerator/imageGenerator.provider';
 
 interface UnsplashRandomPhotoResponse {
   urls: {
@@ -8,7 +8,7 @@ interface UnsplashRandomPhotoResponse {
 }
 
 @Injectable()
-export class UnsplashApiProvider implements UnsplashProvider {
+export class UnsplashApiProvider implements ImageGeneratorProvider {
   private readonly token = process.env.UNSPLASH_TOKEN;
 
   /**

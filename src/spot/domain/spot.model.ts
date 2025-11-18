@@ -26,7 +26,7 @@ export class SpotLike {
 }
 
 export interface SpotConstructorParams {
-  id: number;
+  id: `${string}-${string}-${string}-${string}-${string}`;
   name: string;
   country: Country;
   imageLink: URL;
@@ -50,7 +50,7 @@ export interface ValidateElegibilityParams {
 }
 
 export class Spot {
-  public readonly id: number;
+  public readonly id: `${string}-${string}-${string}-${string}-${string}`;
   public readonly name: string;
   public readonly country: Country;
   public readonly imageLink: URL;

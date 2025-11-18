@@ -29,7 +29,6 @@ export class SpotsService {
     createSpotDto: CreateSpotDto,
     request: AuthenticatedRequest,
   ): Promise<SpotResponseDto> {
-    //todo implement authentification to get userID and userName from token
     const submittedBy = request.user.sub;
     const creatorName = request.user.user_metadata.full_name;
     const spotData: CreateSpotUseCaseParams = {
